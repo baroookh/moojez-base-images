@@ -1,0 +1,11 @@
+# Docker Hub image, copied to ghcr.io/baroookh/moojez-base-images/<same name and tag>
+php:8.5-fpm-bookworm
+php:8.5-cli-bookworm
+composer:2.10.3
+node:24-bookworm-slim
+nginx:1.29-alpine
+postgres:18.6
+postgres:18.6-alpine
+redis:7.4-alpine
+getmeili/meilisearch:v1.17.0
+certbot/certbot:v5.8.0
