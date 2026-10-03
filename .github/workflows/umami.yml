@@ -1,0 +1,40 @@
+name: Umami
+
+# Moojez's own analytics (Umami) is served under moojez.com/stats. Umami
+# reads its sub-path only while it is built (BASE_PATH), so the published
+# image cannot be copied as the others are: it is built here from Umami's
+# own source at a pinned release, where Docker Hub and Prisma's downloads
+# are reachable, and pushed beside the copies, public. A new release is a
+# change to UMAMI_VERSION below.
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/umami.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  UMAMI_VERSION: v3.4.0
+  BASE_PATH: /stats
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Umami's source
+        run: git clone --depth 1 --branch "${UMAMI_VERSION}" https://github.com/umami-software/umami.git umami
+
+      - name: Sign in to ghcr.io
+        run: echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      - name: Build and push
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}/umami:${UMAMI_VERSION}-stats"
+          docker build umami \
+            --build-arg BASE_PATH="${BASE_PATH}" \
+            --label "org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            --tag "${image}"
+          docker push "${image}"
