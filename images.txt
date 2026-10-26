@@ -1,4 +1,5 @@
 # Docker Hub image, copied to ghcr.io/baroookh/moojez-base-images/<same name and tag>
+golang:1.27.3-bookworm
 php:8.5-fpm-bookworm
 php:8.5-cli-bookworm
 composer:2.10.3
