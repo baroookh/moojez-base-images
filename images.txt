@@ -11,3 +11,4 @@ redis:7.4-alpine
 getmeili/meilisearch:v1.55.0
 certbot/certbot:v5.8.0
 grafana/grafana-oss:13.0.2
+glitchtip/glitchtip:6.2.6
