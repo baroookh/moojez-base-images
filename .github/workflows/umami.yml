@@ -5,7 +5,10 @@ name: Umami
 # image cannot be copied as the others are: it is built here from Umami's
 # own source at a pinned release, where Docker Hub and Prisma's downloads
 # are reachable, and pushed beside the copies, public. A new release is a
-# change to UMAMI_VERSION below.
+# change to UMAMI_VERSION below. The same release is built again (a change
+# to this file) when its base has OS fixes: --pull takes node's newest
+# build of the tag Umami names, and its apk the newest curl (2026-11-09:
+# curl 8.22.0-r0 -> 8.23.0-r0, CVE-2026-92392).
 on:
   push:
     branches: [main]
@@ -33,7 +36,7 @@ jobs:
       - name: Build and push
         run: |
           image="ghcr.io/${GITHUB_REPOSITORY,,}/umami:${UMAMI_VERSION}-stats"
-          docker build umami \
+          docker build umami --pull \
             --build-arg BASE_PATH="${BASE_PATH}" \
             --label "org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
             --tag "${image}"
