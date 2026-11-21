@@ -33,8 +33,13 @@ jobs:
             echo "::group::${image}"
             # The source annotation links the package to this public
             # repository, so it is public too and pulled without a login.
+            # A Docker manifest list (certbot's, since 2026-11-21) takes no
+            # annotation: it is copied as it is, into a package an earlier
+            # copy already linked.
             docker buildx imagetools create \
               --annotation "index:org.opencontainers.image.source=${source_url}" \
+              --tag "${target}/${image}" "docker.io/${image}" \
+              || docker buildx imagetools create \
               --tag "${target}/${image}" "docker.io/${image}" \
               || { echo "::error::${image} was not copied"; exit 1; }
             echo "::endgroup::"
